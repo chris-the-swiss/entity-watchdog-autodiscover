@@ -17,7 +17,7 @@ from homeassistant.helpers.selector import (
     SelectSelectorMode,
 )
 
-DOMAIN = "entity_watchdog"
+DOMAIN = "entity_watchdog_autodiscover"
 
 _LOGGER = logging.getLogger(__name__)
 
