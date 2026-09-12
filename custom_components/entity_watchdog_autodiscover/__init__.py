@@ -56,14 +56,23 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 def async_get_entities_for_config_entry(
-    hass: HomeAssistant, config_entry_id: str, device_class_filter: str
+    hass: HomeAssistant, target_selection: str, device_class_filter: str
 ) -> list[str]:
-    """Holt die Entitäten aus der Registry."""
+    """Holt die Entitäten aus der Registry basierend auf Entry ID oder Domain."""
     dev_reg = dr.async_get(hass)
     ent_reg = er.async_get(hass)
 
-    devices = dr.async_entries_for_config_entry(dev_reg, config_entry_id)
-    device_ids = {dev.id for dev in devices}
+    device_ids: set[str] = set()
+
+    # Prüfung: Ist es eine gesamte Domain (z.B. domain:xiaomi_ble) oder eine einzelne Entry ID?
+    if target_selection and target_selection.startswith("domain:"):
+        target_domain = target_selection.split("domain:", 1)[1]
+        for entry in hass.config_entries.async_entries(target_domain):
+            devices = dr.async_entries_for_config_entry(dev_reg, entry.entry_id)
+            device_ids.update({dev.id for dev in devices})
+    elif target_selection:
+        devices = dr.async_entries_for_config_entry(dev_reg, target_selection)
+        device_ids = {dev.id for dev in devices}
 
     matched_entities: list[str] = []
 

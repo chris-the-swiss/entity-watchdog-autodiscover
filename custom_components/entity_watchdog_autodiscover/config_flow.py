@@ -37,15 +37,27 @@ class EntityWatchdogConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_create_entry(title=title, data=user_input)
 
         entries = self.hass.config_entries.async_entries()
-        
-        integration_options: list[SelectOptionDict] = []
+
+        # Domains und ihre zugehörigen Config Entries sammeln
+        domain_map: dict[str, list] = {}
         for entry in entries:
             if entry.domain == DOMAIN:
                 continue
-            
-            label = f"{entry.title} ({entry.domain})"
+            domain_map.setdefault(entry.domain, []).append(entry)
+
+        integration_options: list[SelectOptionDict] = []
+        for domain, domain_entries in domain_map.items():
+            # Wenn nur ein Entry existiert, zeige den Namen des Entries
+            if len(domain_entries) == 1:
+                label = f"{domain_entries[0].title} ({domain})"
+                value = domain_entries[0].entry_id
+            else:
+                # Bei mehreren Entries (z.B. vielen Bluetooth-Geräten) gruppieren nach Domain
+                label = f"Alle {domain}-Geräte ({len(domain_entries)} Einträge)"
+                value = f"domain:{domain}"
+
             integration_options.append(
-                SelectOptionDict(value=entry.entry_id, label=label)
+                SelectOptionDict(value=value, label=label)
             )
 
         integration_options.sort(key=lambda x: x["label"])
