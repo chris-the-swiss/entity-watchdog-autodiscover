@@ -1,14 +1,9 @@
 {
   "domain": "entity_watchdog_autodiscover",
   "name": "Entity Watchdog Autodiscover",
-  "codeowners": ["@chris-the-swiss"],
-  "config_flow": true,
+  "version": "1.0.2",
   "documentation": "https://github.com/chris-the-swiss/entity-watchdog-autodiscover",
-  "issue_tracker": "https://github.com/chris-the-swiss/entity-watchdog-autodiscover/issues",
-  "integration_type": "hub",
-  "iot_class": "calculated",
-  "single_config_entry": true,
-
-  "version": "1.0.1"
+  "requirements": [],
+  "codeowners": ["@chris-the-swiss"],
+  "iot_class": "local_polling"
 }
-

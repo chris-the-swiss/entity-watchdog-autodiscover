@@ -1,4 +1,4 @@
-"""Config flow for Entity Watchdog Auto integration."""
+"""Config flow for Entity Watchdog Autodiscover."""
 from __future__ import annotations
 
 import logging
@@ -9,7 +9,6 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.selector import (
     SelectOptionDict,
     SelectSelector,
@@ -23,27 +22,24 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class EntityWatchdogConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Entity Watchdog."""
+    """Handle a config flow for Entity Watchdog Autodiscover."""
 
     VERSION = 1
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> config_entries.ConfigFlowResult:
-        """Handle the initial step where user selects an integration to watch."""
+        """Handle the initial step."""
         errors: dict[str, str] = {}
 
         if user_input is not None:
             title = user_input.get("title", user_input["target_config_entry_id"])
             return self.async_create_entry(title=title, data=user_input)
 
-        # 1. Alle aktiven Config Entries (Integrationen) ermitteln
         entries = self.hass.config_entries.async_entries()
         
-        # Liste für das Dropdown erstellen
         integration_options: list[SelectOptionDict] = []
         for entry in entries:
-            # Wir schließen die eigene Integration aus
             if entry.domain == DOMAIN:
                 continue
             
@@ -52,10 +48,8 @@ class EntityWatchdogConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 SelectOptionDict(value=entry.entry_id, label=label)
             )
 
-        # Sortieren nach Namen
         integration_options.sort(key=lambda x: x["label"])
 
-        # 2. Formular-Schema definieren
         data_schema = vol.Schema(
             {
                 vol.Required("title", default="Bluetooth Watchdog"): cv.string,
@@ -92,7 +86,7 @@ class EntityWatchdogConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class EntityWatchdogOptionsFlowHandler(config_entries.OptionsFlow):
-    """Handle options flow to update settings."""
+    """Handle options flow."""
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
