@@ -1,14 +1,14 @@
 {
-  "domain": "entity_watchdog",
-  "name": "Entity Watchdog",
-  "codeowners": ["@deepblue120"],
+  "domain": "entity_watchdog_autodiscover",
+  "name": "Entity Watchdog Autodiscover",
+  "codeowners": ["@chris-the-swiss"],
   "config_flow": true,
-  "documentation": "https://github.com/deepblue120/entity-watchdog",
-  "issue_tracker": "https://github.com/deepblue120/entity-watchdog/issues",
+  "documentation": "https://github.com/chris-the-swiss/entity-watchdog-autodiscover",
+  "issue_tracker": "https://github.com/chris-the-swiss/entity-watchdog-autodiscover/issues",
   "integration_type": "hub",
   "iot_class": "calculated",
   "single_config_entry": true,
 
-  "version": "2.3.0"
+  "version": "1.0.1"
 }
 
